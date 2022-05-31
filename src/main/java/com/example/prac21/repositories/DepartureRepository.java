@@ -5,9 +5,11 @@ import com.example.prac21.entities.PostOffice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Component
+@Transactional
 public interface DepartureRepository extends JpaRepository<Departure,Long> {
     List<Departure> findDeparturesByDepartureDate(String date);
     List<Departure> findDeparturesByType(String type);

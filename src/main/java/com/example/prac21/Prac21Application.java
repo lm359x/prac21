@@ -13,12 +13,7 @@ public class Prac21Application {
     private static EmailService service;
 
     public static void main(String[] args) {
-//        sendMail();
         SpringApplication.run(Prac21Application.class, args);
     }
 
-//    @EventListener(ApplicationReadyEvent.class)
-//    public static void sendMail(){
-//        service.sendEmail("ps25072001@gmail.com","subj","hello!");
-//    }
 }

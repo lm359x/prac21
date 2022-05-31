@@ -7,9 +7,11 @@ import com.example.prac21.entities.PostOfficeOnload;
 import com.example.prac21.repositories.PostOfficeRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.mail.MessagingException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -28,6 +30,8 @@ public class PostOfficeService {
     private final PostOfficeRepository officeRepository;
     private Session session;
 
+    @Autowired
+    private final EmailService emailService;
     @PostConstruct
     void init() {
         session = sessionFactory.openSession();
@@ -48,6 +52,11 @@ public class PostOfficeService {
         PostOffice postOffice = new PostOffice(onload.getOfficeName(), onload.getCityName());
         log.info("create office {}", postOffice);
         officeRepository.save(postOffice);
+        try {
+            emailService.sendEmail("new office: "+ postOffice);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
         return postOffice;
     }
 

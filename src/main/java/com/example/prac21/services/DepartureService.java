@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import javax.mail.MessagingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -28,6 +29,9 @@ public class DepartureService {
     private final PostOfficeRepository officeRepository;
     private final com.example.prac21.services.PostOfficeService postOfficeService;
     private Session session;
+
+    @Autowired
+    private final EmailService emailService;
 
     @PostConstruct
     void init() {
@@ -50,6 +54,11 @@ public class DepartureService {
         log.info("Create departure {}", departure);
         departure.setOffice(postOfficeService.getOffice(onload.getOfficeId()));
         departureRepository.save(departure);
+        try {
+            emailService.sendEmail("New dep: "+departure);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
         return departure;
     }
 
